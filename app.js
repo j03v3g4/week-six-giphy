@@ -5,59 +5,61 @@ $(document).ready(function () {
     var topics = []
     console.log(topics);
 
-    // Variable for putting user input into the queryURL
-    // var search = $(response.data).data("search");
-    // Replace trending in queryURL when ready: search?q=" + search + "
-    var queryURL = "https://api.giphy.com/v1/gifs/trending?q=&limit=10&api_key=mhgoaULVsWSutziQOiWLctWPaNKBRVrl";
-    
-    console.log(queryURL);
+    // Wrap function around AJAX to enable clicking buttons to call response
+    function query() {
 
-    // AJAX function
-    $.ajax({
-        url: queryURL,
-        method: "GET"
-    }).then(function (response) {
-        console.log(response.data);
+        // Variables for putting user input into the queryURL
+        var search = $(this).data("search");
+        var queryURL = "https://api.giphy.com/v1/gifs/search?q=" + search + "&limit=10&api_key=mhgoaULVsWSutziQOiWLctWPaNKBRVrl";
+        console.log(queryURL);
 
-        //   For loop to display search results
-        for (var i = 0; i < response.data.length; i++) {
+        // AJAX function
+        $.ajax({
+            url: queryURL,
+            method: "GET"
+        }).then(function (response) {
+            console.log(response.data);
 
-            // Get ratings
-            var rating = response.data[i].rating;
-            // Get still giphy
-            var still = response.data[i].images.fixed_height_still.url;
-            // Get animated giphy
-            var animated = response.data[i].images.fixed_height.url;
-            // Create div for giphys in the html
-            var displayDiv = $("<div>");
-            // Create image tag for giphys in the html
-            var displayImg = $("<img>");
-            // Create p tag for ratings in the html
-            var displayRating = $("<p>").text("Rating: " + rating);
+            //   For loop to display search results
+            for (var i = 0; i < response.data.length; i++) {
 
-            // Add class and data attributes for pausing / unpausing later
-            displayImg.addClass("giphy");
-            displayImg.attr("data-state", "still");
-            displayImg.attr("src", still);
-            displayImg.attr("data-still", still);
-            displayImg.attr("data-animate", animated);
+                // Get ratings
+                var rating = response.data[i].rating;
+                // Get still giphy
+                var still = response.data[i].images.fixed_height_still.url;
+                // Get animated giphy
+                var animated = response.data[i].images.fixed_height.url;
+                // Create div for giphys in the html
+                var displayDiv = $("<div>");
+                // Create image tag for giphys in the html
+                var displayImg = $("<img>");
+                // Create p tag for ratings in the html
+                var displayRating = $("<p>").text("Rating: " + rating);
 
-            // Write everything to the html
-            $("#giphys").prepend(displayDiv);
-            displayDiv.append(displayImg);
-            displayDiv.append(displayRating);
-        }
-    });
+                // Add class and data attributes for pausing / unpausing later
+                displayImg.addClass("giphy");
+                displayImg.attr("data-state", "still");
+                displayImg.attr("src", still);
+                displayImg.attr("data-still", still);
+                displayImg.attr("data-animate", animated);
+
+                // Write everything to the html
+                $("#giphys").prepend(displayDiv);
+                displayDiv.append(displayImg);
+                displayDiv.append(displayRating);
+            }
+        });
+    }
 
     // Function to iterate through topics array to create and append buttons to html
     function displayButtons() {
-        
+
         // Empty buttons div so that buttons don't repeat when another is added
         $("#buttons").empty();
-        
+
         // For loop to display buttons
         for (var i = 0; i < topics.length; i++) {
-            
+
             // Create button in html
             var button = $("<button>");
 
@@ -72,8 +74,8 @@ $(document).ready(function () {
     }
 
     // Function to add click event to the submit button that pushes userInput to topics array and makes a button
-    $("#submit").on("click", function(event) {
-        
+    $("#submit").on("click", function (event) {
+
         // Don't let the user create a blank button
         event.preventDefault();
 
@@ -91,5 +93,21 @@ $(document).ready(function () {
         displayButtons();
     })
 
+    // Function to pause / unpase giphys
+    function pauseUnpause() {
+        if ("data-state" === "still") {
+            $(this).attr("src", $(this).attr("data-animate"));
+            $(this).attr("data-state", "animate");
+        } else {
+            $(this).attr("src", $(this).attr("data-still"));
+            $(this).attr("data-state", "still");
+        }
+    }
+
+    // Click event on giphy to pause / unpause
+    $(document).on("click", ".giphy", pauseUnpause);
+
+    // Click event for btn to get a response
+    $(document).on("click", ".btn", query);
 
 });
