@@ -93,21 +93,20 @@ $(document).ready(function () {
         displayButtons();
     })
 
-// WHEN I CLICK ON A GIPHY THIS JUST COPIES THE FIRST GIPHY ON ALL TEN BUT STAYS STILL (TRIED MOVING INTO AJAX TO ACCESS still / animated DATA STATES BUT NO LICK :'''( ==============================
-    // // Function to pause / unpase giphys
-    // function pauseUnpause() {
-    //     if ("data-state" === "still") {
-    //         $(".giphy").attr("src", animated);
-    //         $(".giphy").attr("data-state", "animate");
-    //     } else {
-    //         $(".giphy").attr("src", still);
-    //         $(".giphy").attr("data-state", "still");
-    //     }
-    // }
+    // Function to pause / unpase giphys
+    function pauseUnpause() {
+        var state = $(this).attr("data-state");
+         if (state === "still") {
+           $(this).attr("src", $(this).attr("data-animate"));
+           $(this).attr("data-state", "animate");
+         } else {
+           $(this).attr("src", $(this).attr("data-still"));
+           $(this).attr("data-state", "still");
+     }
+   }
 
-    // // Click event on giphy to pause / unpause
-    // $(document).on("click", ".giphy", pauseUnpause);
-// WHEN I CLICK ON A GIPHY THIS JUST COPIES THE FIRST GIPHY ON ALL TEN BUT STAYS STILL (TRIED MOVING INTO AJAX TO ACCESS still / animated DATA STATES BUT NO LICK :'''( ==============================
+    // Click event on giphy to pause / unpause
+    $(document).on("click", ".giphy", pauseUnpause);
 
     // Click event for btn to get a response
     $(document).on("click", ".btn", query);
