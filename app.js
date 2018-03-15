@@ -39,7 +39,7 @@ $(document).ready(function () {
             displayImg.attr("data-animate", animated);
 
             // Write everything to the html
-            $("body").prepend(displayDiv);
+            $("#giphys").prepend(displayDiv);
             displayDiv.append(displayImg);
             displayDiv.append(displayRating);
         }
